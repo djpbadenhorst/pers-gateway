@@ -1,0 +1,66 @@
+data "template_file" "vm_startup" {
+  template = "${file("./scripts/vm_startup.sh")}"
+  vars = {
+    gateway_ip = var.gateway_ip
+    tailscale_authkey = var.tailscale_authkey
+  }
+}
+
+data "google_compute_subnetwork" "primary" {
+  project = var.project_id
+  region  = var.region
+  name    = "subnet-primary"
+
+  depends_on = [module.vpc]
+}
+
+resource "google_compute_address" "gateway" {
+  project = var.project_id
+  region  = var.region
+  name    = "gateway"
+
+  subnetwork   = data.google_compute_subnetwork.primary.self_link
+  address      = var.gateway_ip
+  address_type = "INTERNAL"
+}
+
+resource "google_compute_instance" "gateway" {
+  project = var.project_id
+  name    = "gateway"
+  
+  machine_type = "e2-micro"
+  zone         = "${var.region}-b"
+  
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
+    }
+  }
+
+  service_account {
+    email  = var.gateway_sa_email
+    scopes = [ "cloud-platform" ]
+  }
+
+  network_interface {
+    network    = module.vpc.network_self_link
+    subnetwork = data.google_compute_subnetwork.primary.self_link
+    network_ip = google_compute_address.gateway.address
+    //access_config { nat_ip = google_compute_address.ip.address }
+  }
+  
+  tags = ["allow-ssh", "allow-http"]
+
+  metadata_startup_script = data.template_file.vm_startup.rendered
+}
+/*
+resource "google_compute_address" "ip" {
+  project = var.project_id
+  region = var.region
+  name = "ipv4-address"
+}
+
+output "ip" {
+  value = google_compute_address.ip.address
+}
+*/
