@@ -2,4 +2,4 @@
 admin/.terraform*
 infras/.terraform*
 container/src/venv
-container/src/__pycache__/
+**/__pycache__/
