@@ -42,8 +42,11 @@ def stop_instance():
 
 def check_instance():
     try:
-        requests.get(f'''http://{os.environ['GATEWAY_IP']}:80''', timeout=30)
+        response = requests.get(f'''http://{os.environ['GATEWAY_IP']}:80''', timeout=30)
+        if response.status_code == 503 or response.status_code == 500:
+            raise Exception
         return True
+    
     except Exception:
         return False
 

@@ -18,7 +18,9 @@ def index():
         if (session.get('auth_expires') and session.get('auth_expires') > datetime.now(timezone.utc)):
             try:
                 response = requests.get(f'''http://{os.environ['GATEWAY_IP']}:80''', timeout=30)
-            except requests.exceptions.ConnectTimeout:
+                if response.status_code == 503 or response.status_code == 500:
+                    raise Exception
+            except Exception:
                 start_instance()
                 response = requests.get(f'''http://{os.environ['GATEWAY_IP']}:80''', timeout=30)
             return response.content
