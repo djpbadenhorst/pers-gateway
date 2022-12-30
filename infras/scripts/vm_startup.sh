@@ -2,11 +2,22 @@
 sudo mkdir -p /etc/nginx/conf.d/
 cat <<EOT >> /etc/nginx/conf.d/nginx.conf
 server {
+    #server_name ${gateway_ip};
+    server_name djpb.info;
+
+    location /gateway/ {
+        add_header Content-Type text/plain;
+        return 200 'here1';
+        #proxy_pass http://10.0.0.0/gateway/;
+    }
+}
+server {
     server_name ${gateway_ip};
-    
-    location / {
-        add_header Content-Type text/html;
-        return 200 '<html><body>HELLO</body></html>';
+
+    location /gateway/ {
+        add_header Content-Type text/plain;
+        return 200 'here2';
+        #proxy_pass http://10.0.0.0/gateway/;
     }
 }
 EOT
@@ -37,8 +48,8 @@ EOT
 cat idle_shutdown.sh
 sudo apt-get install -y nginx curl
 
-curl -fsSL https://tailscale.com/install.sh | sh
-tailscaled --state=mem:
-tailscale up --accept-routes --authkey=${tailscale_authkey} --hostname=gateway
+#curl -fsSL https://tailscale.com/install.sh | sh
+#sudo tailscaled --state=mem:
+#sudo tailscale up --accept-routes --authkey=${tailscale_authkey} --hostname=gateway
 
 bash idle_shutdown.sh

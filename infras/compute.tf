@@ -46,21 +46,9 @@ resource "google_compute_instance" "gateway" {
     network    = module.vpc.network_self_link
     subnetwork = data.google_compute_subnetwork.primary.self_link
     network_ip = google_compute_address.gateway.address
-    //access_config { nat_ip = google_compute_address.ip.address }
   }
-  
-  tags = ["allow-ssh", "allow-http"]
 
+  tags = [ "http-server", "allow-ssh" ]
+  
   metadata_startup_script = data.template_file.vm_startup.rendered
 }
-/*
-resource "google_compute_address" "ip" {
-  project = var.project_id
-  region = var.region
-  name = "ipv4-address"
-}
-
-output "ip" {
-  value = google_compute_address.ip.address
-}
-*/

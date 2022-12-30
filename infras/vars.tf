@@ -19,7 +19,7 @@ variable "gateway_sa_email" {
 }
 
 variable "gateway_ip" {
-  default = "10.1.0.100"
+  default = "10.10.10.10"
 }
 
 # Environment Variables

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+      async function init() {
+	  updateAuthenticationStatus();
+	  updateGatewayStatus();
+      }
+
+      async function updateAuthenticationStatus() {
+	  fetch('/api/auth/status').then(resp=>{
+	      if (resp.status==200)
+		  $("#auth-status").text("authenticated");
+	      else if (resp.status==403)
+		  $("#auth-status").text("not authenticated");
+	      else
+		  $("#auth-status").text("error");
+	  });
+      }
+      
+      async function updateGatewayStatus() {
+	  fetch('/api/gateway/status').then(resp=> {
+	      resp.json().then(data => {
+		  $("#gateway-status").text(data.payload.status.toLowerCase());
+	      });
+	  });
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <form>
+      <div style="margin: 20px;">
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;"><b>Authentication Status:</b></p>
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;" id="auth-status">loading</p>
+	<button type="button" onclick="window.location.href='auth'">Authenticate</button>
+      </div>
+      <div style="margin: 20px;">
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;"><b>Gateway Status:</b></p>
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;" id="gateway-status">loading</p>
+	<button type="button" onclick="updateGatewayStatus()">Refresh Status</button>
+      </div>
+      <div style="margin: 20px;">
+	<button type="button" onclick="fetch('https://djpb.info/api/gateway/on', {method: 'POST'})">Turn Gateway On</button>
+	<button type="button" onclick="fetch('https://djpb.info/api/gateway/off', {method: 'POST'})">Turn Gateway Off</button>
+      </div>
+      <div style="margin: 20px;">
+	<button type="button" onclick="window.location.href='gateway/'">Visit Gateway</button>
+      </div>
+    </form>
+    
+  </body>
+</html>

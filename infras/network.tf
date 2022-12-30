@@ -5,7 +5,7 @@ module "vpc" {
   
   subnets = [{
     subnet_name           = "subnet-primary"
-    subnet_ip             = "10.1.0.0/24"
+    subnet_ip             = "10.10.0.0/16"
     subnet_region         = var.region
     subnet_private_access = true
   },{
@@ -44,11 +44,11 @@ resource "google_compute_router_nat" "nat" {
 }
 
 resource "google_compute_firewall" "allow_ssh" {
-  project = var.project_id
-  name    = "allow-ssh"
-
+  name      = "allow-ssh"
+  project   = var.project_id
   network   = module.vpc.network_name
   direction = "INGRESS"
+  
   allow {
     protocol = "tcp"
     ports    = ["22"]
@@ -56,19 +56,4 @@ resource "google_compute_firewall" "allow_ssh" {
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["allow-ssh"]
-}
-
-resource "google_compute_firewall" "allow_http" {
-  project = var.project_id
-  name    = "allow-http"
-  
-  network   = module.vpc.network_name
-  direction = "INGRESS"
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["allow-http"]
 }
