@@ -48,8 +48,5 @@ docker run -d --name auth -p 5080:80 -p 5000:5000 -e FLASK_SECRET=secret auth
 docker exec -it auth bash
 gcloud --project djpb-1313 compute instances stop gateway
 gcloud --project djpb-1313 compute instances start gateway
-gcloud --project djpb-1313 compute instances list
 gcloud --project djpb-1313 compute ssh gateway
-pip install google-api-python-client
-pip install google-cloud-compute
 ```
