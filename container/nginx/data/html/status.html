@@ -10,6 +10,7 @@
       }
 
       async function updateAuthenticationStatus() {
+	  $("#auth-status").text("loading");
 	  fetch('/api/auth/status').then(resp=>{
 	      if (resp.status==200)
 		  $("#auth-status").text("authenticated");
@@ -21,6 +22,7 @@
       }
       
       async function updateGatewayStatus() {
+	  $("#gateway-status").text("loading");
 	  fetch('/api/gateway/status').then(resp=> {
 	      resp.json().then(data => {
 		  $("#gateway-status").text(data.payload.status.toLowerCase());
@@ -29,6 +31,7 @@
       }
 
       async function updateGatewayAPIStatus() {
+	  $("#gateway-api-status").text("loading");
 	  fetch('/api/gateway/api/status').then(resp=> {
 	      resp.json().then(data => {
 		  $("#gateway-api-status").text(data.payload.status.toLowerCase());

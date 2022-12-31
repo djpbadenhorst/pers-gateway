@@ -14,10 +14,9 @@ cat <<EOT >> /www/data/html/status.html
           updateTailscaleStatus();
       }
       async function updateTailscaleStatus() {
+ 	  \$("#tailscale-status").text("loading");
 	  fetch('/gateway/api/tailscale/status').then(resp=> {
-              console.log(resp);
 	      resp.json().then(data => {
-	          console.log(data);
  	          \$("#tailscale-status").text(data.payload.status.toLowerCase());
 	      });
 	  });
