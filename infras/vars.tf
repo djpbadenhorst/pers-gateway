@@ -25,3 +25,4 @@ variable "gateway_ip" {
 # Environment Variables
 variable "tailscale_authkey" {}
 variable "flask_secret" {}
+variable "ssh_password" {}

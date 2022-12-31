@@ -6,6 +6,7 @@
       async function init() {
 	  updateAuthenticationStatus();
 	  updateGatewayStatus();
+	  updateGatewayAPIStatus();
       }
 
       async function updateAuthenticationStatus() {
@@ -26,6 +27,14 @@
 	      });
 	  });
       }
+
+      async function updateGatewayAPIStatus() {
+	  fetch('/api/gateway/api/status').then(resp=> {
+	      resp.json().then(data => {
+		  $("#gateway-api-status").text(data.payload.status.toLowerCase());
+	      });
+	  });
+      }
     </script>
   </head>
 
@@ -42,13 +51,17 @@
 	<button type="button" onclick="updateGatewayStatus()">Refresh Status</button>
       </div>
       <div style="margin: 20px;">
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;"><b>Gateway API Status:</b></p>
+	<p style="display:inline; float:left; margin: 0; margin-right: 10px;" id="gateway-api-status">loading</p>
+	<button type="button" onclick="updateGatewayAPIStatus()">Refresh Status</button>
+      </div>
+      <div style="margin: 20px;">
 	<button type="button" onclick="fetch('https://djpb.info/api/gateway/on', {method: 'POST'})">Turn Gateway On</button>
 	<button type="button" onclick="fetch('https://djpb.info/api/gateway/off', {method: 'POST'})">Turn Gateway Off</button>
       </div>
       <div style="margin: 20px;">
-	<button type="button" onclick="window.location.href='gateway/'">Visit Gateway</button>
+	<button type="button" onclick="window.location.href='gateway/status'">Access Gateway</button>
       </div>
-    </form>
-    
+    </form>    
   </body>
 </html>

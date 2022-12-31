@@ -1,8 +1,9 @@
 data "template_file" "vm_startup" {
   template = "${file("./scripts/vm_startup.sh")}"
   vars = {
-    gateway_ip = var.gateway_ip
     tailscale_authkey = var.tailscale_authkey
+    ssh_password = var.ssh_password
+    gateway_ip = var.gateway_ip
   }
 }
 
